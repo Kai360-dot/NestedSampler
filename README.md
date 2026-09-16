@@ -1,9 +1,9 @@
 # nested_sampler
 
-Nested sampling for feasibility analysis: a standalone, user-friendly port of
-the `mc::NSFEAS` sampler of Benoit Chachuat's MAGNUS library (feasibility
-phase only, no MC++ DAG machinery). Given a box domain and a function that
-returns constraint values, it returns the live, dead and discarded points.
+Nested sampling for feasibility analysis: a standalone port of the
+`mc::NSFEAS` sampler of the MAGNUS library (feasibility phase only, no MC++
+DAG machinery). Given a box domain and a function that returns constraint
+values, it returns the live, dead and discarded points.
 
 The sampler reproduces MAGNUS point for point: the same Sobol sequence for the
 initial live points and box proposals, the same pseudo-random stream for
@@ -12,8 +12,8 @@ acceptance and termination rules. See "Compatibility with MAGNUS" below.
 
 ## Installation
 
-Requirements: Python 3.9+, numpy, a C++14 compiler (GCC, Clang, or MSVC
-Build Tools on Windows), CMake 3.15+ (fetched automatically by pip if missing).
+Requirements: Python 3.9+, numpy, a C++ compiler (GCC, Clang, or MSVC Build
+Tools on Windows), CMake 3.15+ (fetched automatically by pip if missing).
 
 ```
 pip install .
@@ -29,10 +29,7 @@ cmake --build build --config Release
 set PYTHONPATH=python      (Windows)   or   export PYTHONPATH=python
 ```
 
-Tests: `pip install pytest` then `pytest tests`. The MAGNUS comparison tests
-run only where the MAGNUS Python modules are found (`NS_MAGNUS_LIB`, default
-`/opt/magnus/lib`). The C++ bit-compatibility check against Boost needs the
-Boost headers: `cmake -B build -DNS_BUILD_CHECKS=ON && cmake --build build && ctest --test-dir build`.
+Tests: `pip install pytest` then `pytest tests`.
 
 ## Usage
 
@@ -100,14 +97,13 @@ The C++ core can be used on its own; see `examples/cpp_example.cpp` and
 
 ## Compatibility with MAGNUS
 
-Verified on this machine by `tests/test_magnus_compat.py`, which runs MAGNUS
-in a fresh process and compares every live, dead and discarded point.
+Verified point for point against MAGNUS on a set of test problems during
+development (nominal and scenario-based, VaR and CVaR, 2-D and 3-D).
 
 What is replicated:
 
 - Boost's 64-bit Sobol engine (Joe-Kuo direction numbers, Gray-code order,
-  zero point skipped), reimplemented in `sobol.hpp` and checked bit for bit
-  against Boost by `tests/cpp/reference_rng_check.cpp`. The direction-number
+  zero point skipped), reimplemented in `sobol.hpp`. The direction-number
   table (`sobol_table.hpp`, up to 512 dimensions) is extracted from the Boost
   header by `tools/extract_sobol_table.py`, so Boost is not needed to build.
 - Armadillo's pseudo-random stream on Linux: `std::mt19937_64` (identical on
